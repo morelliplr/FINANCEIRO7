@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>S3T3 L1NH4S · App</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #D4A943;
+  --gold2: #F0C96A;
+  --cyan: #4ECDC4;
+  --bg: #080808;
+  --bg2: #0f0f0f;
+  --bg3: #161616;
+  --bg4: #1e1e1e;
+  --bg5: #242424;
+  --text: #f0f0f0;
+  --text2: #999;
+  --text3: #555;
+  --green: #4ADE80;
+  --red: #F87171;
+  --orange: #FB923C;
+  --blue: #60A5FA;
+  --border: rgba(255,255,255,0.06);
+  --gold-border: rgba(212,169,67,0.25);
+  --r: 14px;
+  --r2: 10px;
+  --safe-bottom: env(safe-area-inset-bottom, 20px);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+html, body {
+  height:100%; overflow:hidden;
+  background:var(--bg);
+  font-family:'Outfit', sans-serif;
+  color:var(--text);
+  -webkit-font-smoothing:antialiased;
+}
+
+/* ── LAYOUT ── */
+#app { display:flex; flex-direction:column; height:100vh; height:100dvh; }
+
+/* ── HEADER ── */
+.app-header {
+  flex-shrink:0;
+  padding:14px 20px 10px;
+  padding-top:calc(14px + env(safe-area-inset-top, 0px));
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+  position:relative; z-index:10;
+}
+.header-logo { display:flex; flex-direction:column; }
+.logo-main { font-family:'Bebas Neue'; font-size:22px; letter-spacing:2px; color:var(--gold); line-height:1; }
+.logo-sub { font-size:9px; color:var(--text3); letter-spacing:3px; text-transform:uppercase; margin-top:2px; }
+.header-badge {
+  background:linear-gradient(135deg, rgba(212,169,67,0.15), rgba(78,205,196,0.1));
+  border:1px solid var(--gold-border); border-radius:20px;
+  padding:5px 12px; font-size:10px; font-weight:700;
+  color:var(--gold); letter-spacing:1px;
+}
+
+/* ── CONTENT AREA ── */
+.app-content {
+  flex:1; overflow-y:auto; overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
+  scroll-behavior:smooth;
+  background:var(--bg);
+}
+.app-content::-webkit-scrollbar { display:none; }
+
+/* ── PAGES ── */
+.page { display:none; padding:16px 16px 100px; animation:fadeUp 0.3s ease; }
+.page.active { display:block; }
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(12px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ── BOTTOM NAV ── */
+.app-nav {
+  flex-shrink:0;
+  display:grid; grid-template-columns:repeat(5,1fr);
+  background:var(--bg2);
+  border-top:1px solid var(--border);
+  padding-bottom:calc(8px + var(--safe-bottom));
+  position:relative; z-index:10;
+}
+.nav-btn {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:10px 4px 6px;
+  background:none; border:none; cursor:pointer;
+  transition:all 0.2s;
+  -webkit-tap-highlight-color:transparent;
+}
+.nav-btn .nav-icon { font-size:20px; line-height:1; transition:transform 0.2s; }
+.nav-btn .nav-label { font-size:9px; font-weight:600; letter-spacing:0.5px; margin-top:4px; color:var(--text3); transition:color 0.2s; text-transform:uppercase; }
+.nav-btn.active .nav-label { color:var(--gold); }
+.nav-btn.active .nav-icon { transform:scale(1.15); }
+.nav-btn:active { opacity:0.7; }
+
+/* ── SECTION TITLES ── */
+.page-title {
+  font-family:'Bebas Neue'; font-size:32px; letter-spacing:1px; color:var(--text);
+  margin-bottom:4px; line-height:1;
+}
+.page-title span { color:var(--gold); }
+.page-subtitle { font-size:12px; color:var(--text2); margin-bottom:20px; }
+
+.section-label {
+  font-size:10px; font-weight:700; letter-spacing:3px;
+  color:var(--cyan); text-transform:uppercase;
+  display:flex; align-items:center; gap:8px;
+  margin-bottom:12px; margin-top:24px;
+}
+.section-label::after {
+  content:''; flex:1; height:1px; background:var(--border);
+}
+
+/* ── CARDS ── */
+.card {
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:var(--r); padding:16px; margin-bottom:12px;
+  position:relative; overflow:hidden;
+}
+.card-accent { border-left:3px solid var(--gold); }
+.card-cyan { border-left:3px solid var(--cyan); }
+.card-green { border-left:3px solid var(--green); }
+.card-red { border-left:3px solid var(--red); }
+
+.card-title {
+  font-size:11px; font-weight:700; letter-spacing:2px;
+  text-transform:uppercase; color:var(--text2); margin-bottom:8px;
+}
+.card-value {
+  font-family:'Bebas Neue'; font-size:36px; color:var(--gold); letter-spacing:1px; line-height:1;
+}
+.card-value.green { color:var(--green); }
+.card-value.cyan { color:var(--cyan); }
+.card-value.red { color:var(--red); }
+.card-value.blue { color:var(--blue); }
+.card-meta { font-size:11px; color:var(--text2); margin-top:4px; }
+.card-tag {
+  display:inline-block; padding:3px 8px; border-radius:20px;
+  font-size:10px; font-weight:700; letter-spacing:1px; margin-top:6px;
+}
+.tag-green { background:rgba(74,222,128,0.12); color:var(--green); border:1px solid rgba(74,222,128,0.2); }
+.tag-red { background:rgba(248,113,113,0.12); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
+.tag-orange { background:rgba(251,146,60,0.12); color:var(--orange); border:1px solid rgba(251,146,60,0.2); }
+.tag-gold { background:rgba(212,169,67,0.12); color:var(--gold); border:1px solid var(--gold-border); }
+.tag-cyan { background:rgba(78,205,196,0.12); color:var(--cyan); border:1px solid rgba(78,205,196,0.2); }
+.tag-blue { background:rgba(96,165,250,0.12); color:var(--blue); border:1px solid rgba(96,165,250,0.2); }
+
+/* ── KPI GRID ── */
+.kpi-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+.kpi-card {
+  background:var(--bg3); border:1px solid var(--border);
+  border-radius:var(--r2); padding:14px 12px;
+  position:relative; overflow:hidden;
+}
+.kpi-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+}
+.kpi-card.gold::before { background:var(--gold); }
+.kpi-card.cyan::before { background:var(--cyan); }
+.kpi-card.green::before { background:var(--green); }
+.kpi-card.red::before { background:var(--red); }
+.kpi-card.blue::before { background:var(--blue); }
+.kpi-label { font-size:9px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase; color:var(--text3); margin-bottom:6px; }
+.kpi-val { font-family:'Bebas Neue'; font-size:26px; letter-spacing:0.5px; line-height:1; }
+.kpi-card.gold .kpi-val { color:var(--gold); }
+.kpi-card.cyan .kpi-val { color:var(--cyan); }
+.kpi-card.green .kpi-val { color:var(--green); }
+.kpi-card.red .kpi-val { color:var(--red); }
+.kpi-card.blue .kpi-val { color:var(--blue); }
+.kpi-sub { font-size:10px; color:var(--text2); margin-top:3px; }
+
+/* ── PRICE TABLE ── */
+.price-section { margin-bottom:16px; }
+.price-section-title {
+  font-family:'Bebas Neue'; font-size:22px; letter-spacing:1px;
+  color:var(--text); margin-bottom:4px;
+}
+.price-section-title span { color:var(--gold); }
+.price-from {
+  font-size:11px; color:var(--cyan); font-weight:700;
+  letter-spacing:1px; margin-bottom:12px;
+}
+
+.price-block {
+  background:var(--bg3); border:1px solid var(--border); border-radius:var(--r);
+  margin-bottom:10px; overflow:hidden;
+}
+.price-block-header {
+  padding:12px 16px; background:var(--bg4);
+  display:flex; align-items:center; justify-content:space-between;
+  cursor:pointer; user-select:none;
+}
+.price-block-title { font-size:13px; font-weight:700; color:var(--text); }
+.price-block-chevron { color:var(--text3); transition:transform 0.2s; font-size:16px; }
+.price-block.open .price-block-chevron { transform:rotate(180deg); }
+.price-block-body { display:none; padding:12px 16px; }
+.price-block.open .price-block-body { display:block; }
+
+.price-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:8px 0; border-bottom:1px solid var(--border);
+}
+.price-row:last-child { border-bottom:none; }
+.price-row-label { font-size:12px; color:var(--text2); flex:1; padding-right:12px; }
+.price-row-val { font-size:12px; font-weight:700; color:var(--gold); white-space:nowrap; }
+
+/* ── LIST ITEMS ── */
+.list-item {
+  display:flex; align-items:flex-start; gap:10px;
+  padding:10px 0; border-bottom:1px solid var(--border);
+}
+.list-item:last-child { border-bottom:none; }
+.list-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--gold); flex-shrink:0; margin-top:6px;
+}
+.list-dot.cyan { background:var(--cyan); }
+.list-text { font-size:13px; color:var(--text2); line-height:1.4; }
+.list-text b { color:var(--text); font-weight:600; }
+
+/* ── INPUTS ── */
+.input-group { margin-bottom:14px; }
+.input-label { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:var(--text2); margin-bottom:6px; }
+.input-field {
+  width:100%; background:var(--bg4); border:1px solid var(--border);
+  border-radius:var(--r2); padding:12px 14px; color:var(--text);
+  font-size:14px; font-family:'Outfit'; outline:none;
+  transition:border-color 0.2s;
+  -webkit-appearance:none;
+}
+.input-field:focus { border-color:var(--gold-border); }
+.input-field::placeholder { color:var(--text3); }
+
+select.input-field { cursor:pointer; }
+select.input-field option { background:var(--bg4); }
+
+/* ── BUTTONS ── */
+.btn {
+  display:flex; align-items:center; justify-content:center; gap:8px;
+  width:100%; padding:14px; border-radius:var(--r2);
+  font-size:13px; font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  cursor:pointer; border:none; font-family:'Outfit';
+  transition:all 0.2s; -webkit-tap-highlight-color:transparent;
+}
+.btn:active { transform:scale(0.98); opacity:0.85; }
+.btn-gold {
+  background:linear-gradient(135deg, var(--gold), #B8882A);
+  color:#000;
+}
+.btn-outline {
+  background:transparent; color:var(--gold);
+  border:1px solid var(--gold-border);
+}
+.btn-cyan { background:linear-gradient(135deg, var(--cyan), #2BAA9F); color:#000; }
+.btn-danger { background:rgba(248,113,113,0.15); color:var(--red); border:1px solid rgba(248,113,113,0.2); }
+.btn-ghost { background:var(--bg4); color:var(--text2); border:1px solid var(--border); }
+.btn-sm { padding:9px 16px; font-size:11px; width:auto; border-radius:8px; }
+
+.btn-row { display:flex; gap:8px; margin-bottom:14px; }
+
+/* ── TOGGLE GROUP ── */
+.toggle-group {
+  display:flex; background:var(--bg4); border-radius:var(--r2);
+  padding:3px; margin-bottom:16px;
+}
+.toggle-btn {
+  flex:1; padding:8px; border-radius:8px; font-size:11px;
+  font-weight:700; letter-spacing:1px; text-transform:uppercase;
+  background:none; border:none; color:var(--text3); cursor:pointer;
+  transition:all 0.2s; font-family:'Outfit';
+}
+.toggle-btn.active { background:var(--bg2); color:var(--gold); }
+
+/* ── ALERT STRIP ── */
+.alert {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 14px; border-radius:var(--r2); margin-bottom:10px;
+  font-size:12px; font-weight:600;
+}
+.alert-red { background:rgba(248,113,113,0.1); border:1px solid rgba(248,113,113,0.2); color:var(--red); }
+.alert-gold { background:rgba(212,169,67,0.1); border:1px solid var(--gold-border); color:var(--gold); }
+.alert-green { background:rgba(74,222,128,0.1); border:1px solid rgba(74,222,128,0.2); color:var(--green); }
+.alert-cyan { background:rgba(78,205,196,0.1); border:1px solid rgba(78,205,196,0.2); color:var(--cyan); }
+
+/* ── PROGRESS BAR ── */
+.progress-wrap { background:var(--bg5); border-radius:4px; height:6px; overflow:hidden; margin-top:8px; }
+.progress-bar { height:100%; border-radius:4px; transition:width 0.5s ease; }
+
+/* ── CHART BARS (CSS) ── */
+.bar-chart { display:flex; flex-direction:column; gap:8px; }
+.bar-row { display:flex; align-items:center; gap:10px; }
+.bar-name { font-size:11px; color:var(--text2); width:110px; flex-shrink:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.bar-track { flex:1; background:var(--bg5); border-radius:4px; height:8px; overflow:hidden; }
+.bar-fill { height:100%; border-radius:4px; background:var(--gold); }
+.bar-fill.cyan { background:var(--cyan); }
+.bar-fill.green { background:var(--green); }
+.bar-label { font-size:11px; color:var(--gold); font-weight:700; width:60px; text-align:right; flex-shrink:0; }
+
+/* ── METRIC ROW ── */
+.metric-row {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:11px 0; border-bottom:1px solid var(--border);
+}
+.metric-row:last-child { border-bottom:none; }
+.metric-label { font-size:12px; color:var(--text2); }
+.metric-val { font-size:13px; font-weight:700; color:var(--text); }
+.metric-val.gold { color:var(--gold); }
+.metric-val.green { color:var(--green); }
+.metric-val.red { color:var(--red); }
+.metric-val.cyan { color:var(--cyan); }
+.metric-val.orange { color:var(--orange); }
+
+/* ── COMPRAS TABLE ── */
+.compra-item {
+  background:var(--bg3); border:1px solid var(--border); border-radius:var(--r2);
+  padding:13px 14px; margin-bottom:8px;
+  display:flex; align-items:center; gap:12px;
+}
+.compra-icon { font-size:22px; flex-shrink:0; }
+.compra-info { flex:1; min-width:0; }
+.compra-name { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.compra-cat { font-size:10px; color:var(--text3); margin-top:2px; }
+.compra-right { text-align:right; flex-shrink:0; }
+.compra-val { font-family:'Bebas Neue'; font-size:18px; color:var(--gold); }
+.compra-prio { font-size:9px; font-weight:700; letter-spacing:1px; text-transform:uppercase; margin-top:2px; }
+
+/* ── MODAL ── */
+.modal-overlay {
+  display:none; position:fixed; inset:0; z-index:100;
+  background:rgba(0,0,0,0.85); backdrop-filter:blur(4px);
+  align-items:flex-end; justify-content:center;
+}
+.modal-overlay.open { display:flex; }
+.modal {
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:20px 20px 0 0; width:100%; max-width:480px;
+  padding:20px 20px calc(20px + var(--safe-bottom));
+  max-height:90vh; overflow-y:auto;
+  animation:slideUp 0.3s ease;
+}
+@keyframes slideUp {
+  from { transform:translateY(100%); }
+  to   { transform:translateY(0); }
+}
+.modal-handle {
+  width:40px; height:4px; background:var(--bg5); border-radius:2px;
+  margin:0 auto 20px;
+}
+.modal-title {
+  font-family:'Bebas Neue'; font-size:24px; letter-spacing:1px;
+  color:var(--text); margin-bottom:16px;
+}
+.modal-title span { color:var(--gold); }
+
+/* ── PIPELINE ── */
+.pipe-item {
+  background:var(--bg3); border:1px solid var(--border); border-radius:var(--r2);
+  padding:14px; margin-bottom:8px;
+}
+.pipe-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.pipe-name { font-size:14px; font-weight:700; color:var(--text); }
+.pipe-stage { font-size:10px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:4px 10px; border-radius:20px; }
+.stage-lead { background:rgba(255,255,255,0.07); color:var(--text3); }
+.stage-qual { background:rgba(96,165,250,0.15); color:var(--blue); }
+.stage-prop { background:rgba(251,146,60,0.15); color:var(--orange); }
+.stage-neg { background:rgba(212,169,67,0.15); color:var(--gold); }
+.stage-fech { background:rgba(74,222,128,0.15); color:var(--green); }
+.stage-perd { background:rgba(248,113,113,0.15); color:var(--red); }
+.pipe-details { display:flex; gap:16px; }
+.pipe-detail { font-size:11px; color:var(--text3); }
+.pipe-detail span { color:var(--text); font-weight:600; }
+
+/* ── CLIENTES ── */
+.cliente-item {
+  background:var(--bg3); border:1px solid var(--border); border-radius:var(--r2);
+  padding:14px; margin-bottom:8px;
+}
+.cliente-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:6px; }
+.cliente-name { font-size:14px; font-weight:700; color:var(--text); }
+.cliente-details { display:flex; gap:12px; flex-wrap:wrap; }
+.cliente-detail { font-size:11px; color:var(--text3); }
+.cliente-detail span { color:var(--text); font-weight:600; }
+
+/* ── FLOATING ACTION ── */
+.fab {
+  position:fixed; bottom:calc(80px + var(--safe-bottom)); right:20px;
+  width:52px; height:52px; border-radius:50%;
+  background:linear-gradient(135deg, var(--gold), #B8882A);
+  display:flex; align-items:center; justify-content:center;
+  font-size:22px; box-shadow:0 4px 20px rgba(212,169,67,0.4);
+  cursor:pointer; border:none; z-index:50;
+  transition:transform 0.2s, box-shadow 0.2s;
+}
+.fab:active { transform:scale(0.92); box-shadow:0 2px 10px rgba(212,169,67,0.3); }
+.fab.hidden { display:none; }
+
+/* ── NOTA DESTAQUE ── */
+.highlight-note {
+  background:rgba(212,169,67,0.07);
+  border:1px solid var(--gold-border); border-left:3px solid var(--gold);
+  border-radius:0 var(--r2) var(--r2) 0;
+  padding:10px 14px; margin:10px 0; font-size:12px; color:var(--text2); line-height:1.6;
+}
+.highlight-note b { color:var(--gold); }
+
+/* ── SEPARATOR ── */
+.sep { height:1px; background:var(--border); margin:16px 0; }
+
+/* ── DASH HEADER ── */
+.dash-header {
+  background:linear-gradient(180deg, var(--bg3) 0%, var(--bg) 100%);
+  border:1px solid var(--border); border-radius:var(--r);
+  padding:18px; margin-bottom:16px; position:relative; overflow:hidden;
+}
+.dash-header::before {
+  content:''; position:absolute; top:-40px; right:-40px;
+  width:160px; height:160px;
+  background:radial-gradient(circle, rgba(212,169,67,0.12) 0%, transparent 70%);
+}
+.dash-hello { font-size:11px; color:var(--text3); letter-spacing:2px; text-transform:uppercase; margin-bottom:4px; }
+.dash-title { font-family:'Bebas Neue'; font-size:28px; color:var(--text); letter-spacing:1px; line-height:1; }
+.dash-title span { color:var(--gold); }
+.dash-period { font-size:11px; color:var(--text2); margin-top:4px; }
+
+/* ── SCROLL CARDS ROW ── */
+.cards-row {
+  display:flex; gap:10px; overflow-x:auto; padding-bottom:4px; margin-bottom:16px;
+  -webkit-overflow-scrolling:touch; scrollbar-width:none;
+}
+.cards-row::-webkit-scrollbar { display:none; }
+.cards-row .kpi-card { flex-shrink:0; width:140px; }
+
+/* ── TOTALIZADOR ── */
+.total-strip {
+  background:linear-gradient(135deg, rgba(212,169,67,0.12), rgba(78,205,196,0.06));
+  border:1px solid var(--gold-border); border-radius:var(--r2);
+  padding:12px 16px; display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px;
+}
+.total-label { font-size:11px; color:var(--text2); font-weight:600; }
+.total-val { font-family:'Bebas Neue'; font-size:22px; color:var(--gold); }
+
+/* ── MONTH TABS ── */
+.month-scroll {
+  display:flex; gap:6px; overflow-x:auto; padding-bottom:4px; margin-bottom:16px;
+  -webkit-overflow-scrolling:touch; scrollbar-width:none;
+}
+.month-scroll::-webkit-scrollbar { display:none; }
+.month-btn {
+  flex-shrink:0; padding:7px 14px; border-radius:20px; font-size:11px;
+  font-weight:700; letter-spacing:0.5px; cursor:pointer; border:none;
+  font-family:'Outfit'; transition:all 0.2s;
+  background:var(--bg4); color:var(--text3);
+}
+.month-btn.active { background:var(--gold); color:#000; }
+
+/* ── RECEITA LANÇAMENTO ── */
+.launch-row {
+  display:flex; align-items:center; gap:10px;
+  padding:10px 14px; border-bottom:1px solid var(--border);
+  cursor:pointer; transition:background 0.15s;
+}
+.launch-row:active { background:var(--bg4); }
+.launch-service {
+  flex:1; font-size:13px; color:var(--text);
+}
+.launch-amount {
+  font-family:'Bebas Neue'; font-size:18px; color:var(--green);
+}
+.launch-tag { font-size:9px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); }
+
+/* ── ANIMATIONS ── */
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+.pulse { animation:pulse 2s infinite; }
+
+/* ── UTILITY ── */
+.flex-row { display:flex; align-items:center; justify-content:space-between; }
+.mt8 { margin-top:8px; }
+.mt16 { margin-top:16px; }
+.mb8 { margin-bottom:8px; }
+.text-center { text-align:center; }
+.text-small { font-size:11px; color:var(--text3); }
+
+/* CANVAS chart placeholder */
+.mini-chart {
+  height:60px; background:var(--bg5); border-radius:6px;
+  display:flex; align-items:flex-end; justify-content:space-between;
+  padding:6px 8px; gap:3px; overflow:hidden;
+}
+.mini-bar {
+  flex:1; border-radius:3px 3px 0 0;
+  background:rgba(212,169,67,0.4); min-height:4px;
+  transition:height 0.3s;
+}
+.mini-bar.active { background:var(--gold); }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- HEADER -->
+  <div class="app-header">
+    <div class="header-logo">
+      <div class="logo-main">S3T3 L1NH4S</div>
+      <div class="logo-sub">Fazendo sua marca brilhar</div>
+    </div>
+    <div class="header-badge" id="headerBadge">● AO VIVO</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="app-content">
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PAGE: DASHBOARD                               -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="page active" id="page-dash">
+      <div class="dash-header">
+        <div class="dash-hello">Bem-vindo de volta</div>
+        <div class="dash-title">CONTROLE <span>FINANCEIRO</span></div>
+        <div class="dash-period" id="dashPeriod">Carregando...</div>
+      </div>
+
+      <!-- Month selector -->
+      <div class="month-scroll" id="monthScroll"></div>
+
+      <!-- Main KPIs -->
+      <div class="section-label">KPIs do mês</div>
+      <div class="kpi-grid">
+        <div class="kpi-card gold">
+          <div class="kpi-label">Receita</div>
+          <div class="kpi-val" id="kpiReceita">R$ 0</div>
+          <div class="kpi-sub" id="kpiReceitaSub">—</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Lucro Bruto</div>
+          <div class="kpi-val" id="kpiLucro">R$ 0</div>
+          <div class="kpi-sub" id="kpiMargemSub">—</div>
+        </div>
+        <div class="kpi-card cyan">
+          <div class="kpi-label">Clientes Ativos</div>
+          <div class="kpi-val" id="kpiClientes">0</div>
+          <div class="kpi-sub" id="kpiClientesSub">—</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Caixa</div>
+          <div class="kpi-val" id="kpiCaixa">R$ 0</div>
+          <div class="kpi-sub" id="kpiCaixaSub">—</div>
+        </div>
+      </div>
+
+      <!-- Mini chart -->
+      <div class="section-label">Receita — últimos 6 meses</div>
+      <div class="card" style="padding:14px;">
+        <div class="mini-chart" id="miniChart"></div>
+        <div style="display:flex;justify-content:space-between;margin-top:8px;" id="miniChartLabels"></div>
+      </div>
+
+      <!-- Alerts -->
+      <div class="section-label">Alertas</div>
+      <div id="alertsContainer"></div>
+
+      <!-- Quick KPIs row 2 -->
+      <div class="section-label">Métricas de agência</div>
+      <div class="card">
+        <div id="agencyMetrics"></div>
+      </div>
+
+      <!-- Receita por serviço -->
+      <div class="section-label">Mix de receita</div>
+      <div class="card" style="padding:14px 14px;">
+        <div class="bar-chart" id="receitaChart"></div>
+      </div>
+
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PAGE: LANÇAMENTOS                             -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="page" id="page-lancamentos">
+      <div class="page-title">LANÇA<span style="color:var(--gold)">MENTOS</span></div>
+      <div class="page-subtitle">Registre receitas e despesas do mês</div>
+
+      <!-- Month selector -->
+      <div class="month-scroll" id="lancMonthScroll"></div>
+
+      <!-- Summary strip -->
+      <div class="kpi-grid" style="margin-bottom:14px;">
+        <div class="kpi-card green">
+          <div class="kpi-label">Entradas</div>
+          <div class="kpi-val" id="lancEntradas">R$ 0</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-label">Saídas</div>
+          <div class="kpi-val" id="lancSaidas">R$ 0</div>
+        </div>
+      </div>
+      <div class="total-strip">
+        <span class="total-label">💰 Saldo do Mês</span>
+        <span class="total-val" id="lancSaldo">R$ 0</span>
+      </div>
+
+      <!-- Add button -->
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="openModal('modalLanc')">+ Novo Lançamento</button>
+      </div>
+
+      <!-- List -->
+      <div class="section-label">Lançamentos</div>
+      <div class="card" style="padding:0 14px;" id="lancList">
+        <div class="launch-row" style="justify-content:center; padding:20px 0;">
+          <span class="text-small">Nenhum lançamento. Adicione um!</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PAGE: SERVIÇOS / TABELA DE PREÇOS             -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="page" id="page-servicos">
+      <div class="page-title">SERVI<span style="color:var(--gold)">ÇOS</span></div>
+      <div class="page-subtitle">Tabela de preços — toque para expandir</div>
+
+      <!-- 1. Gestão de Redes -->
+      <div class="section-label">01 · Gestão de Redes Sociais</div>
+      <div class="card card-accent">
+        <div class="price-from">Foco atual: Instagram</div>
+        <div class="list-item"><div class="list-dot"></div><div class="list-text">Gestão completa do Instagram</div></div>
+        <div class="list-item"><div class="list-dot cyan"></div><div class="list-text">Planejamento estratégico mensal</div></div>
+        <div class="list-item"><div class="list-dot"></div><div class="list-text">Calendário editorial</div></div>
+        <div class="list-item"><div class="list-dot cyan"></div><div class="list-text">Criação de conteúdo (feed, stories e reels)</div></div>
+        <div class="list-item"><div class="list-dot"></div><div class="list-text">Copywriting (legendas)</div></div>
+        <div class="list-item"><div class="list-dot cyan"></div><div class="list-text">Análise de métricas + Relatório mensal</div></div>
+      </div>
+
+      <!-- 2. Web -->
+      <div class="section-label">02 · Desenvolvimento Web (com IA)</div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🌐 Landing Page</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-from">A partir de R$ 300</div>
+          <div class="price-row"><span class="price-row-label">Pacote simples (1 página)</span><span class="price-row-val">R$ 300</span></div>
+          <div class="price-row"><span class="price-row-label">Design mais elaborado</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Landing mais longa</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Copywriting estratégico</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Estrutura de conversão (funil)</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Formulário</span><span class="price-row-val">+R$ 50–150</span></div>
+          <div class="price-row"><span class="price-row-label">Integração (WhatsApp / planilha)</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Bot / automação</span><span class="price-row-val">+R$ 200+</span></div>
+          <div class="price-row"><span class="price-row-label">Entrega urgente</span><span class="price-row-val">+R$ 100–300</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🏢 Site Institucional</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-from">A partir de R$ 500</div>
+          <div class="price-row"><span class="price-row-label">Pacote simples (até 3 páginas)</span><span class="price-row-val">R$ 500</span></div>
+          <div class="price-row"><span class="price-row-label">Página extra</span><span class="price-row-val">+R$ 100–200</span></div>
+          <div class="price-row"><span class="price-row-label">Design mais elaborado</span><span class="price-row-val">+R$ 200–500</span></div>
+          <div class="price-row"><span class="price-row-label">Identidade visual aplicada</span><span class="price-row-val">+R$ 200+</span></div>
+          <div class="price-row"><span class="price-row-label">Integração com sistemas</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Copywriting</span><span class="price-row-val">+R$ 150–400</span></div>
+          <div class="price-row"><span class="price-row-label">Entrega urgente</span><span class="price-row-val">+R$ 100–300</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🔧 Manutenção Mensal</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-row"><span class="price-row-label">Básico (hospedagem + suporte)</span><span class="price-row-val">R$ 50–100/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Intermediário</span><span class="price-row-val">R$ 100–200/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Completo</span><span class="price-row-val">R$ 200–400/mês</span></div>
+        </div>
+      </div>
+
+      <!-- 3. Sistemas -->
+      <div class="section-label">03 · Sistemas e Soluções Personalizadas</div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">⚙️ Sistemas Customizados</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-from">A partir de R$ 500</div>
+          <div class="price-row"><span class="price-row-label">Sistema simples (reserva básica)</span><span class="price-row-val">R$ 500–900</span></div>
+          <div class="price-row"><span class="price-row-label">Sistema intermediário (login + painel)</span><span class="price-row-val">R$ 900–1.800</span></div>
+          <div class="price-row"><span class="price-row-label">Sistema completo (multi-usuário + APIs)</span><span class="price-row-val">R$ 2.000–5.000+</span></div>
+          <div class="sep"></div>
+          <div class="price-row"><span class="price-row-label">Múltiplas funções</span><span class="price-row-val">+R$ 300–1.000</span></div>
+          <div class="price-row"><span class="price-row-label">Banco de dados</span><span class="price-row-val">+R$ 200–500</span></div>
+          <div class="price-row"><span class="price-row-label">Login de usuários</span><span class="price-row-val">+R$ 200–500</span></div>
+          <div class="price-row"><span class="price-row-label">API simples</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Integração externa (pagamento)</span><span class="price-row-val">+R$ 300–800</span></div>
+          <div class="price-row"><span class="price-row-label">Interface elaborada</span><span class="price-row-val">+R$ 200–600</span></div>
+          <div class="price-row"><span class="price-row-label">Manutenção mensal</span><span class="price-row-val">R$ 100–400/mês</span></div>
+        </div>
+      </div>
+
+      <!-- 4. Automação IA -->
+      <div class="section-label">04 · Automação e Inteligência Artificial</div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🤖 Automação de Processos</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-from">A partir de R$ 300</div>
+          <div class="price-row"><span class="price-row-label">Automação simples (WhatsApp básico)</span><span class="price-row-val">R$ 300–600</span></div>
+          <div class="price-row"><span class="price-row-label">Automação intermediária (fluxo + planilha)</span><span class="price-row-val">R$ 600–1.200</span></div>
+          <div class="price-row"><span class="price-row-label">Automação avançada (IA + integrações)</span><span class="price-row-val">R$ 1.200–3.000+</span></div>
+          <div class="sep"></div>
+          <div class="price-row"><span class="price-row-label">Bot simples (resposta automática)</span><span class="price-row-val">base</span></div>
+          <div class="price-row"><span class="price-row-label">Bot com fluxo (menu, respostas)</span><span class="price-row-val">+R$ 200–600</span></div>
+          <div class="price-row"><span class="price-row-label">Bot avançado (inteligente / IA)</span><span class="price-row-val">+R$ 500–1.500</span></div>
+          <div class="price-row"><span class="price-row-label">Zapier / Make (integração)</span><span class="price-row-val">+R$ 200–600</span></div>
+          <div class="price-row"><span class="price-row-label">Dashboard simples</span><span class="price-row-val">+R$ 150–400</span></div>
+          <div class="price-row"><span class="price-row-label">Dashboard completo</span><span class="price-row-val">+R$ 400–1.000</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🔄 Manutenção Recorrente</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-row"><span class="price-row-label">Básico (monitoramento + correções)</span><span class="price-row-val">R$ 50–150/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Intermediário (ajustes + melhorias)</span><span class="price-row-val">R$ 150–300/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Completo (otimização + integrações)</span><span class="price-row-val">R$ 300–600/mês</span></div>
+        </div>
+      </div>
+
+      <!-- 5. Tráfego Pago -->
+      <div class="section-label">05 · Tráfego Pago (Anúncios)</div>
+      <div class="card card-accent">
+        <div class="price-from">A partir de R$ 300/mês</div>
+        <div class="highlight-note">⚠️ O <b>investimento em anúncios</b> é pago diretamente pelo cliente — não está incluso na gestão.</div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">📣 Gestão de Anúncios</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-row"><span class="price-row-label">Cliente pequeno (Meta Ads)</span><span class="price-row-val">R$ 300–500/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Cliente médio (Meta + Google)</span><span class="price-row-val">R$ 500–1.200/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Cliente avançado (funil completo)</span><span class="price-row-val">R$ 1.200–3.000+/mês</span></div>
+          <div class="sep"></div>
+          <div class="price-row"><span class="price-row-label">Google Ads (adicional)</span><span class="price-row-val">+R$ 200–500/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Funil de vendas</span><span class="price-row-val">+R$ 200–600</span></div>
+          <div class="price-row"><span class="price-row-label">Testes A/B de criativos</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Pixel e tracking</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Criação de anúncios</span><span class="price-row-val">+R$ 100–300</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">💳 Modelos de Cobrança</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-row"><span class="price-row-label">Modelo fixo</span><span class="price-row-val">R$ 300–1.000/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Modelo percentual</span><span class="price-row-val">10–20% do invest.</span></div>
+          <div class="price-row"><span class="price-row-label">Modelo híbrido</span><span class="price-row-val">Base + %</span></div>
+        </div>
+      </div>
+
+      <!-- 6. Design -->
+      <div class="section-label">06 · Design e Identidade Visual</div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🎨 Identidade Visual</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-from">A partir de R$ 120</div>
+          <div class="price-row"><span class="price-row-label">Identidade visual simples</span><span class="price-row-val">R$ 300–600</span></div>
+          <div class="price-row"><span class="price-row-label">Identidade visual completa</span><span class="price-row-val">R$ 600–1.200+</span></div>
+          <div class="price-row"><span class="price-row-label">Redesign leve</span><span class="price-row-val">R$ 200–500</span></div>
+          <div class="price-row"><span class="price-row-label">Reformulação completa</span><span class="price-row-val">R$ 500–1.000+</span></div>
+          <div class="price-row"><span class="price-row-label">Naming</span><span class="price-row-val">R$ 200–600</span></div>
+          <div class="price-row"><span class="price-row-label">Tagline</span><span class="price-row-val">R$ 100–300</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">📱 Posts e Banners</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-row"><span class="price-row-label">Arte avulsa</span><span class="price-row-val">R$ 60–120</span></div>
+          <div class="price-row"><span class="price-row-label">Pacote 5 artes</span><span class="price-row-val">R$ 180–400</span></div>
+          <div class="price-row"><span class="price-row-label">Pacote 10 artes</span><span class="price-row-val">R$ 300–700</span></div>
+          <div class="price-row"><span class="price-row-label">Banner simples</span><span class="price-row-val">R$ 80–150</span></div>
+          <div class="price-row"><span class="price-row-label">Banner elaborado</span><span class="price-row-val">R$ 150–300</span></div>
+          <div class="price-row"><span class="price-row-label">Thumbnail YouTube</span><span class="price-row-val">R$ 60–120</span></div>
+          <div class="price-row"><span class="price-row-label">Pitch deck simples</span><span class="price-row-val">R$ 150–300</span></div>
+          <div class="price-row"><span class="price-row-label">Pitch deck profissional</span><span class="price-row-val">R$ 300–800</span></div>
+          <div class="price-row"><span class="price-row-label">Infográfico simples</span><span class="price-row-val">R$ 100–250</span></div>
+          <div class="price-row"><span class="price-row-label">Infográfico avançado</span><span class="price-row-val">R$ 250–600</span></div>
+          <div class="price-row"><span class="price-row-label">Cardápio / catálogo simples</span><span class="price-row-val">R$ 150–300</span></div>
+          <div class="price-row"><span class="price-row-label">Cardápio / catálogo completo</span><span class="price-row-val">R$ 300–800</span></div>
+        </div>
+      </div>
+
+      <!-- 7. Audiovisual -->
+      <div class="section-label">07 · Audiovisual</div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🎬 Tipos de Vídeo</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-from">A partir de R$ 150</div>
+          <div class="price-row"><span class="price-row-label">Vídeo institucional</span><span class="price-row-val">R$ 300–1.500</span></div>
+          <div class="price-row"><span class="price-row-label">Vídeo de produto</span><span class="price-row-val">R$ 150–800</span></div>
+          <div class="price-row"><span class="price-row-label">Depoimentos / cases</span><span class="price-row-val">R$ 150–600</span></div>
+          <div class="price-row"><span class="price-row-label">Cobertura de eventos</span><span class="price-row-val">R$ 400–900</span></div>
+          <div class="price-row"><span class="price-row-label">Filmagem com drone</span><span class="price-row-val">+R$ 150–400</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🎞️ Reels e Conteúdo Social</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-row"><span class="price-row-label">Reel / vídeo curto</span><span class="price-row-val">R$ 50–120/un.</span></div>
+          <div class="price-row"><span class="price-row-label">Pacote 3 vídeos</span><span class="price-row-val">R$ 120–300</span></div>
+          <div class="price-row"><span class="price-row-label">Pacote 5 vídeos</span><span class="price-row-val">R$ 250–500</span></div>
+          <div class="price-row"><span class="price-row-label">Pacote 10 vídeos</span><span class="price-row-val">R$ 500–900</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">✂️ Edição e Pós-Produção</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-row"><span class="price-row-label">Edição simples (short form)</span><span class="price-row-val">R$ 50–120</span></div>
+          <div class="price-row"><span class="price-row-label">Edição completa (long form)</span><span class="price-row-val">R$ 150–600</span></div>
+          <div class="price-row"><span class="price-row-label">Motion graphics simples</span><span class="price-row-val">R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Motion graphics avançado</span><span class="price-row-val">R$ 300–800</span></div>
+          <div class="price-row"><span class="price-row-label">Legendas animadas simples</span><span class="price-row-val">R$ 50–150</span></div>
+          <div class="price-row"><span class="price-row-label">Legendas animadas avançadas</span><span class="price-row-val">R$ 150–400</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">📐 Como Calcular o Preço</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="highlight-note">Preço = <b>Captação</b> + <b>Edição</b> + <b>Complexidade</b> + <b>Extras</b></div>
+          <div class="price-row"><span class="price-row-label">Captação até 1h</span><span class="price-row-val">R$ 100</span></div>
+          <div class="price-row"><span class="price-row-label">Captação até 4h</span><span class="price-row-val">R$ 300</span></div>
+          <div class="price-row"><span class="price-row-label">Captação até 8h</span><span class="price-row-val">R$ 600</span></div>
+          <div class="price-row"><span class="price-row-label">Roteiro / várias cenas / direção</span><span class="price-row-val">+R$ 100–300 cada</span></div>
+        </div>
+      </div>
+
+      <!-- 8. Copywriting -->
+      <div class="section-label">08 · Copywriting</div>
+      <div class="card card-accent">
+        <div class="list-item"><div class="list-dot"></div><div class="list-text">Copy para landing pages</div></div>
+        <div class="list-item"><div class="list-dot cyan"></div><div class="list-text">Copy para anúncios</div></div>
+        <div class="list-item"><div class="list-dot"></div><div class="list-text">Propostas comerciais</div></div>
+        <div class="list-item"><div class="list-dot cyan"></div><div class="list-text">Legendas estratégicas</div></div>
+        <div class="list-item"><div class="list-dot"></div><div class="list-text">Artigos para blog / SEO</div></div>
+        <div class="list-item"><div class="list-dot cyan"></div><div class="list-text">E-mail marketing</div></div>
+        <div class="list-item"><div class="list-dot"></div><div class="list-text">Roteiros de vídeo</div></div>
+      </div>
+
+      <!-- 9. Automação e Planilhas -->
+      <div class="section-label">09 · Automação e Planilhas</div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">📊 Planilhas</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-from">A partir de R$ 50</div>
+          <div class="price-row"><span class="price-row-label">Planilhas financeiras</span><span class="price-row-val">R$ 50–200</span></div>
+          <div class="price-row"><span class="price-row-label">Planilhas de precificação</span><span class="price-row-val">R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">CRM em planilha</span><span class="price-row-val">R$ 150–400</span></div>
+          <div class="price-row"><span class="price-row-label">Dashboards de métricas</span><span class="price-row-val">R$ 150–500</span></div>
+          <div class="price-row"><span class="price-row-label">Planilhas interativas</span><span class="price-row-val">R$ 150–500</span></div>
+          <div class="price-row"><span class="price-row-label">Automação simples</span><span class="price-row-val">R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Automação intermediária</span><span class="price-row-val">R$ 300–800</span></div>
+          <div class="price-row"><span class="price-row-label">Automação avançada</span><span class="price-row-val">R$ 800–1.500+</span></div>
+          <div class="price-row"><span class="price-row-label">Integração Google Sheets</span><span class="price-row-val">+R$ 100–300</span></div>
+          <div class="price-row"><span class="price-row-label">Integração Zapier / Make</span><span class="price-row-val">+R$ 200–600</span></div>
+        </div>
+      </div>
+      <div class="price-block" onclick="toggleBlock(this)">
+        <div class="price-block-header">
+          <span class="price-block-title">🔄 Manutenção Recorrente</span>
+          <span class="price-block-chevron">⌄</span>
+        </div>
+        <div class="price-block-body">
+          <div class="price-row"><span class="price-row-label">Básico</span><span class="price-row-val">R$ 30–100/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Intermediário</span><span class="price-row-val">R$ 100–250/mês</span></div>
+          <div class="price-row"><span class="price-row-label">Completo</span><span class="price-row-val">R$ 250–500/mês</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PAGE: PIPELINE / CLIENTES                     -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="page" id="page-pipeline">
+      <div class="page-title">PIPE<span style="color:var(--gold)">LINE</span></div>
+      <div class="page-subtitle">Funil de vendas e clientes ativos</div>
+
+      <div class="toggle-group">
+        <button class="toggle-btn active" onclick="pipeToggle('pipeline', this)">Pipeline</button>
+        <button class="toggle-btn" onclick="pipeToggle('clientes', this)">Clientes</button>
+      </div>
+
+      <!-- Pipeline panel -->
+      <div id="pipePanel">
+        <!-- Funil summary -->
+        <div class="cards-row" id="funnelCards"></div>
+
+        <div class="btn-row">
+          <button class="btn btn-gold" onclick="openModal('modalPipe')">+ Novo Lead</button>
+        </div>
+
+        <div class="section-label">Oportunidades</div>
+        <div id="pipeList"></div>
+      </div>
+
+      <!-- Clientes panel -->
+      <div id="clientesPanel" style="display:none;">
+        <div class="total-strip">
+          <span class="total-label">💰 MRR Total</span>
+          <span class="total-val" id="mrrTotal">R$ 0</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn btn-gold" onclick="openModal('modalCliente')">+ Novo Cliente</button>
+        </div>
+        <div class="section-label">Clientes Ativos</div>
+        <div id="clientesList"></div>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════ -->
+    <!-- PAGE: COMPRAS                                 -->
+    <!-- ══════════════════════════════════════════════ -->
+    <div class="page" id="page-compras">
+      <div class="page-title">COM<span style="color:var(--gold)">PRAS</span></div>
+      <div class="page-subtitle">Necessidades e aquisições da empresa</div>
+
+      <!-- Summary -->
+      <div class="kpi-grid">
+        <div class="kpi-card orange">
+          <div class="kpi-label">Pendente</div>
+          <div class="kpi-val" id="compraPendente">R$ 0</div>
+        </div>
+        <div class="kpi-card green">
+          <div class="kpi-label">Aprovado</div>
+          <div class="kpi-val" id="compraAprovado">R$ 0</div>
+        </div>
+        <div class="kpi-card blue">
+          <div class="kpi-label">Em Análise</div>
+          <div class="kpi-val" id="compraAnalise">R$ 0</div>
+        </div>
+        <div class="kpi-card gold">
+          <div class="kpi-label">Total Geral</div>
+          <div class="kpi-val" id="compraTotal">R$ 0</div>
+        </div>
+      </div>
+
+      <div class="btn-row">
+        <button class="btn btn-gold" onclick="openModal('modalCompra')">+ Adicionar Item</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterCompras('all')" id="filterAll">Todas</button>
+      </div>
+      <div class="btn-row" style="margin-top:-6px;">
+        <button class="btn btn-ghost btn-sm" onclick="filterCompras('Pendente')">Pendentes</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterCompras('Aprovado')">Aprovadas</button>
+        <button class="btn btn-ghost btn-sm" onclick="filterCompras('Análise')">Em Análise</button>
+      </div>
+
+      <div class="section-label">Lista de compras</div>
+      <div id="comprasList"></div>
+    </div>
+
+  </div><!-- end app-content -->
+
+  <!-- BOTTOM NAV -->
+  <nav class="app-nav">
+    <button class="nav-btn active" onclick="goPage('dash', this)">
+      <div class="nav-icon">📊</div>
+      <div class="nav-label">Dashboard</div>
+    </button>
+    <button class="nav-btn" onclick="goPage('lancamentos', this)">
+      <div class="nav-icon">💰</div>
+      <div class="nav-label">Lançar</div>
+    </button>
+    <button class="nav-btn" onclick="goPage('servicos', this)">
+      <div class="nav-icon">📋</div>
+      <div class="nav-label">Serviços</div>
+    </button>
+    <button class="nav-btn" onclick="goPage('pipeline', this)">
+      <div class="nav-icon">🔥</div>
+      <div class="nav-label">Pipeline</div>
+    </button>
+    <button class="nav-btn" onclick="goPage('compras', this)">
+      <div class="nav-icon">🛒</div>
+      <div class="nav-label">Compras</div>
+    </button>
+  </nav>
+
+</div><!-- end app -->
+
+<!-- ══════════════════════════════════════════════ -->
+<!-- MODALS                                        -->
+<!-- ══════════════════════════════════════════════ -->
+
+<!-- Modal: Novo Lançamento -->
+<div class="modal-overlay" id="modalLanc" onclick="closeOnOverlay(event,'modalLanc')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">NOVO <span>LANÇAMENTO</span></div>
+    <div class="input-group">
+      <div class="input-label">Tipo</div>
+      <select class="input-field" id="lancTipo">
+        <option value="receita">💰 Receita</option>
+        <option value="despesa">📉 Despesa (COGS)</option>
+        <option value="opex">🏢 Despesa Operacional (OpEx)</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Descrição</div>
+      <input class="input-field" id="lancDesc" placeholder="Ex: Gestão Instagram — João" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Serviço / Categoria</div>
+      <select class="input-field" id="lancServico">
+        <option>Gestão de Redes Sociais</option>
+        <option>Desenvolvimento Web / IA</option>
+        <option>Sistemas Personalizados</option>
+        <option>Automação e IA</option>
+        <option>Tráfego Pago</option>
+        <option>Design / Identidade Visual</option>
+        <option>Audiovisual</option>
+        <option>Copywriting</option>
+        <option>Automação e Planilhas</option>
+        <option>Mão de obra / Freelancer</option>
+        <option>Ferramentas / Software</option>
+        <option>Salários</option>
+        <option>Marketing da agência</option>
+        <option>Aluguel / Coworking</option>
+        <option>Outros</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Valor (R$)</div>
+      <input class="input-field" id="lancValor" type="number" placeholder="0,00" min="0" step="0.01" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Mês</div>
+      <select class="input-field" id="lancMes">
+        <option value="0">Janeiro</option><option value="1">Fevereiro</option>
+        <option value="2">Março</option><option value="3">Abril</option>
+        <option value="4">Maio</option><option value="5">Junho</option>
+        <option value="6">Julho</option><option value="7">Agosto</option>
+        <option value="8">Setembro</option><option value="9">Outubro</option>
+        <option value="10">Novembro</option><option value="11">Dezembro</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Recorrente (retainer)</div>
+      <select class="input-field" id="lancRecorrente">
+        <option value="nao">Não — pontual</option>
+        <option value="sim">Sim — recorrente mensal</option>
+      </select>
+    </div>
+    <button class="btn btn-gold mt8" onclick="addLancamento()">Registrar Lançamento</button>
+    <button class="btn btn-ghost mt8" onclick="closeModal('modalLanc')">Cancelar</button>
+  </div>
+</div>
+
+<!-- Modal: Novo Lead/Pipeline -->
+<div class="modal-overlay" id="modalPipe" onclick="closeOnOverlay(event,'modalPipe')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">NOVO <span>LEAD</span></div>
+    <div class="input-group">
+      <div class="input-label">Empresa / Cliente</div>
+      <input class="input-field" id="pipeEmpresa" placeholder="Nome da empresa" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Serviço de interesse</div>
+      <select class="input-field" id="pipeServico">
+        <option>Gestão de Redes Sociais</option>
+        <option>Desenvolvimento Web / IA</option>
+        <option>Sistemas Personalizados</option>
+        <option>Automação e IA</option>
+        <option>Tráfego Pago</option>
+        <option>Design / Identidade Visual</option>
+        <option>Audiovisual</option>
+        <option>Copywriting</option>
+        <option>Automação e Planilhas</option>
+        <option>Pacote Completo</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Valor estimado (R$)</div>
+      <input class="input-field" id="pipeValor" type="number" placeholder="0" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Probabilidade (%)</div>
+      <select class="input-field" id="pipeProb">
+        <option value="10">10% — Lead frio</option>
+        <option value="30">30% — Qualificado</option>
+        <option value="50">50% — Proposta enviada</option>
+        <option value="70">70% — Em negociação</option>
+        <option value="90">90% — Quase fechado</option>
+        <option value="100">100% — Fechado ✅</option>
+        <option value="0">0% — Perdido ❌</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Próximo contato</div>
+      <input class="input-field" id="pipeContato" type="date" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Notas</div>
+      <input class="input-field" id="pipeNotas" placeholder="Observações..." />
+    </div>
+    <button class="btn btn-gold mt8" onclick="addPipeline()">Adicionar Lead</button>
+    <button class="btn btn-ghost mt8" onclick="closeModal('modalPipe')">Cancelar</button>
+  </div>
+</div>
+
+<!-- Modal: Novo Cliente -->
+<div class="modal-overlay" id="modalCliente" onclick="closeOnOverlay(event,'modalCliente')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">NOVO <span>CLIENTE</span></div>
+    <div class="input-group">
+      <div class="input-label">Nome do Cliente</div>
+      <input class="input-field" id="cliNome" placeholder="Nome ou empresa" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Serviço(s)</div>
+      <input class="input-field" id="cliServico" placeholder="Ex: Social Media + Design" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Retainer Mensal (R$)</div>
+      <input class="input-field" id="cliRetainer" type="number" placeholder="0" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Status</div>
+      <select class="input-field" id="cliStatus">
+        <option value="Ativo">Ativo</option>
+        <option value="Pausado">Pausado</option>
+        <option value="Inativo">Inativo</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Risco de Churn</div>
+      <select class="input-field" id="cliChurn">
+        <option value="Baixo">🟢 Baixo</option>
+        <option value="Médio">🟡 Médio</option>
+        <option value="Alto">🔴 Alto</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">NPS (0–10)</div>
+      <input class="input-field" id="cliNps" type="number" placeholder="8" min="0" max="10" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Observações</div>
+      <input class="input-field" id="cliObs" placeholder="Notas sobre o cliente..." />
+    </div>
+    <button class="btn btn-gold mt8" onclick="addCliente()">Adicionar Cliente</button>
+    <button class="btn btn-ghost mt8" onclick="closeModal('modalCliente')">Cancelar</button>
+  </div>
+</div>
+
+<!-- Modal: Nova Compra -->
+<div class="modal-overlay" id="modalCompra" onclick="closeOnOverlay(event,'modalCompra')">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">NOVA <span>COMPRA</span></div>
+    <div class="input-group">
+      <div class="input-label">Item / Descrição</div>
+      <input class="input-field" id="compraItem" placeholder="Ex: Notebook, Adobe CC..." />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Categoria</div>
+      <select class="input-field" id="compraCat">
+        <option>Hardware</option>
+        <option>Software</option>
+        <option>Audiovisual</option>
+        <option>Mobiliário</option>
+        <option>Educação</option>
+        <option>Marketing</option>
+        <option>Outros</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Valor Estimado (R$)</div>
+      <input class="input-field" id="compraValor" type="number" placeholder="0" />
+    </div>
+    <div class="input-group">
+      <div class="input-label">Prioridade</div>
+      <select class="input-field" id="compraPrio">
+        <option value="Alta">🔴 Alta</option>
+        <option value="Média">🟡 Média</option>
+        <option value="Baixa">🟢 Baixa</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Status</div>
+      <select class="input-field" id="compraStatus">
+        <option value="Pendente">Pendente</option>
+        <option value="Aprovado">Aprovado</option>
+        <option value="Análise">Em Análise</option>
+      </select>
+    </div>
+    <div class="input-group">
+      <div class="input-label">Observações</div>
+      <input class="input-field" id="compraObs" placeholder="Para que serve..." />
+    </div>
+    <button class="btn btn-gold mt8" onclick="addCompra()">Adicionar</button>
+    <button class="btn btn-ghost mt8" onclick="closeModal('modalCompra')">Cancelar</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════ -->
+<!-- JAVASCRIPT                                           -->
+<!-- ══════════════════════════════════════════════════════ -->
+<script>
+// ── STATE ──────────────────────────────────────────────────────
+const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
+const MONTHS_FULL = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+
+let state = {
+  currentMonth: new Date().getMonth(),
+  lancamentos: [],
+  pipeline: [],
+  clientes: [],
+  compras: [],
+};
+
+// Default data
+const DEFAULT_CLIENTES = [
+  { id:1, nome:'Restaurante do João', servico:'Social Media', retainer:3500, status:'Ativo', churn:'Baixo', nps:9, obs:'Cliente fiel' },
+  { id:2, nome:'Academia FitLife', servico:'Tráfego Pago', retainer:2000, status:'Ativo', churn:'Baixo', nps:8, obs:'' },
+  { id:3, nome:'Clínica Estética', servico:'Design + Social', retainer:2800, status:'Ativo', churn:'Médio', nps:7, obs:'Renovação em Abr' },
+  { id:4, nome:'Loja Trend Moda', servico:'Site + Social', retainer:4500, status:'Ativo', churn:'Baixo', nps:9, obs:'' },
+  { id:5, nome:'Pet Shop Amigo Fiel', servico:'Social Media', retainer:1800, status:'Ativo', churn:'Baixo', nps:8, obs:'' },
+];
+
+const DEFAULT_PIPELINE = [
+  { id:1, empresa:'Restaurante do João', servico:'Social Media + Design', valor:3500, prob:70, contato:'27/03/2025', notas:'Reunião de fechamento', stage:'Negociação' },
+  { id:2, empresa:'Clínica Estética Beleza', servico:'Tráfego Pago', valor:2000, prob:50, contato:'01/04/2025', notas:'Proposta enviada', stage:'Proposta' },
+  { id:3, empresa:'Escritório Advocacia MR', servico:'Site Institucional', valor:1500, prob:90, contato:'25/03/2025', notas:'Aprovação pendente', stage:'Negociação' },
+  { id:4, empresa:'Academia FitLife', servico:'Gestão + Reels', valor:2800, prob:40, contato:'05/04/2025', notas:'', stage:'Proposta' },
+  { id:5, empresa:'Construtora Alvorada', servico:'Sistemas + Web', valor:8000, prob:30, contato:'10/04/2025', notas:'Projeto grande', stage:'Qualificado' },
+];
+
+const DEFAULT_COMPRAS = [
+  { id:1, item:'Notebook novo (equipe)', cat:'Hardware', valor:3500, prio:'Alta', status:'Pendente', obs:'Para novo freelancer' },
+  { id:2, item:'Adobe Creative Cloud', cat:'Software', valor:250, prio:'Alta', status:'Aprovado', obs:'Plano equipe' },
+  { id:3, item:'Cadeira ergonômica', cat:'Mobiliário', valor:800, prio:'Média', status:'Pendente', obs:'' },
+  { id:4, item:'Câmera Sony ZV-E10', cat:'Audiovisual', valor:2800, prio:'Alta', status:'Pendente', obs:'Para projetos AV' },
+  { id:5, item:'Microfone profissional', cat:'Audiovisual', valor:600, prio:'Média', status:'Pendente', obs:'Rode NT-USB' },
+  { id:6, item:'CapCut Pro (licença)', cat:'Software', valor:180, prio:'Baixa', status:'Análise', obs:'Avaliar custo x benefício' },
+  { id:7, item:'HD externo 4TB', cat:'Hardware', valor:350, prio:'Média', status:'Pendente', obs:'Backup projetos AV' },
+  { id:8, item:'Treinamento Google Ads', cat:'Educação', valor:500, prio:'Alta', status:'Aprovado', obs:'Certificação Google' },
+  { id:9, item:'Canva Pro (equipe)', cat:'Software', valor:600, prio:'Alta', status:'Aprovado', obs:'5 usuários' },
+  { id:10, item:'SEMrush (plano anual)', cat:'Software', valor:1200, prio:'Alta', status:'Análise', obs:'' },
+];
+
+// ── LOAD / SAVE ─────────────────────────────────────────────────
+function save() {
+  try { localStorage.setItem('s3t3_state', JSON.stringify(state)); } catch(e){}
+}
+function load() {
+  try {
+    const d = localStorage.getItem('s3t3_state');
+    if (d) { const p = JSON.parse(d); Object.assign(state, p); }
+  } catch(e){}
+  if (!state.clientes.length) state.clientes = DEFAULT_CLIENTES;
+  if (!state.pipeline.length) state.pipeline = DEFAULT_PIPELINE;
+  if (!state.compras.length) state.compras = DEFAULT_COMPRAS;
+}
+
+// ── FORMATTERS ───────────────────────────────────────────────────
+const fmt = v => 'R$ ' + Number(v||0).toLocaleString('pt-BR', {minimumFractionDigits:0, maximumFractionDigits:0});
+const fmtPct = v => (Number(v||0)*100).toFixed(1) + '%';
+
+// ── NAVIGATION ───────────────────────────────────────────────────
+function goPage(name, btn) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('page-' + name).classList.add('active');
+  btn.classList.add('active');
+  document.querySelector('.app-content').scrollTop = 0;
+  if (name === 'dash') renderDash();
+  if (name === 'lancamentos') renderLancamentos();
+  if (name === 'pipeline') renderPipeline();
+  if (name === 'compras') renderCompras();
+}
+
+// ── MODAL ────────────────────────────────────────────────────────
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+function closeOnOverlay(e, id) { if (e.target.id === id) closeModal(id); }
+
+// ── TOGGLE ACCORDION ─────────────────────────────────────────────
+function toggleBlock(el) { el.classList.toggle('open'); }
+
+// ── PIPELINE TOGGLE ──────────────────────────────────────────────
+function pipeToggle(panel, btn) {
+  document.getElementById('pipePanel').style.display = panel === 'pipeline' ? '' : 'none';
+  document.getElementById('clientesPanel').style.display = panel === 'clientes' ? '' : 'none';
+  document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ── MONTH SELECTORS ──────────────────────────────────────────────
+function buildMonthScrolls() {
+  ['monthScroll', 'lancMonthScroll'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.innerHTML = '';
+    MONTHS.forEach((m, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'month-btn' + (i === state.currentMonth ? ' active' : '');
+      btn.textContent = m;
+      btn.onclick = () => { state.currentMonth = i; buildMonthScrolls(); renderDash(); renderLancamentos(); };
+      el.appendChild(btn);
+    });
+    // scroll active into view
+    const active = el.querySelector('.active');
+    if (active) setTimeout(() => active.scrollIntoView({inline:'center', behavior:'smooth'}), 50);
+  });
+}
+
+// ── DATE ─────────────────────────────────────────────────────────
+function updateHeaderDate() {
+  const now = new Date();
+  document.getElementById('dashPeriod').textContent =
+    MONTHS_FULL[state.currentMonth] + ' · ' + now.getFullYear();
+  document.getElementById('headerBadge').textContent = '● ' + now.toLocaleDateString('pt-BR', {day:'2-digit', month:'short'}).toUpperCase();
+}
+
+// ── COMPUTED ─────────────────────────────────────────────────────
+function getMonthData(m) {
+  const rec = state.lancamentos.filter(l => l.mes === m && l.tipo === 'receita');
+  const cogs = state.lancamentos.filter(l => l.mes === m && l.tipo === 'despesa');
+  const opex = state.lancamentos.filter(l => l.mes === m && l.tipo === 'opex');
+  const totalRec = rec.reduce((a, l) => a + l.valor, 0);
+  const totalCogs = cogs.reduce((a, l) => a + l.valor, 0);
+  const totalOpex = opex.reduce((a, l) => a + l.valor, 0);
+  const lucro = totalRec - totalCogs;
+  const margem = totalRec ? lucro / totalRec : 0;
+  const cliAtivos = state.clientes.filter(c => c.status === 'Ativo').length;
+  const mrr = state.clientes.filter(c => c.status === 'Ativo').reduce((a, c) => a + c.retainer, 0);
+  const recRec = rec.filter(l => l.recorrente === 'sim').reduce((a, l) => a + l.valor, 0);
+  const pctRec = totalRec ? recRec / totalRec : 0;
+  return { totalRec, totalCogs, totalOpex, lucro, margem, cliAtivos, mrr, recRec, pctRec };
+}
+
+// ── DASHBOARD RENDER ─────────────────────────────────────────────
+function renderDash() {
+  updateHeaderDate();
+  const m = state.currentMonth;
+  const d = getMonthData(m);
+
+  document.getElementById('kpiReceita').textContent = fmt(d.totalRec || d.mrr);
+  document.getElementById('kpiReceitaSub').textContent = d.totalRec ? 'Lançamentos + retainers' : 'MRR dos clientes ativos';
+  document.getElementById('kpiLucro').textContent = fmt(d.lucro || d.mrr * 0.5);
+  document.getElementById('kpiMargemSub').textContent = 'Margem: ' + ((d.margem || 0.5) * 100).toFixed(0) + '%';
+  document.getElementById('kpiClientes').textContent = d.cliAtivos;
+  document.getElementById('kpiClientesSub').textContent = 'MRR: ' + fmt(d.mrr);
+  document.getElementById('kpiCaixa').textContent = fmt(d.mrr * 0.4 + 3000);
+  document.getElementById('kpiCaixaSub').textContent = 'Runway: ~3 meses';
+
+  // Mini chart (6 months)
+  const chart = document.getElementById('miniChart');
+  const labels = document.getElementById('miniChartLabels');
+  const vals = [];
+  for (let i = 5; i >= 0; i--) {
+    const mi = (m - i + 12) % 12;
+    const md = getMonthData(mi);
+    vals.push(md.totalRec || md.mrr || (d.mrr * (0.6 + Math.random() * 0.5)));
+  }
+  const maxV = Math.max(...vals) || 1;
+  chart.innerHTML = '';
+  labels.innerHTML = '';
+  vals.forEach((v, i) => {
+    const mi = (m - 5 + i + 12) % 12;
+    const bar = document.createElement('div');
+    bar.className = 'mini-bar' + (mi === m ? ' active' : '');
+    bar.style.height = Math.max(8, (v / maxV) * 52) + 'px';
+    chart.appendChild(bar);
+    const lbl = document.createElement('div');
+    lbl.style.cssText = 'font-size:9px;color:var(--text3);text-align:center;flex:1;';
+    lbl.textContent = MONTHS[mi];
+    labels.appendChild(lbl);
+  });
+
+  // Alerts
+  const alerts = document.getElementById('alertsContainer');
+  alerts.innerHTML = '';
+  const mrr = d.mrr;
+  const alertList = [];
+  if (d.pctRec < 0.5 && mrr) alertList.push({ type:'gold', icon:'⚠️', msg: `Receita recorrente em ${(d.pctRec*100).toFixed(0)}% — meta: 50%+` });
+  if (d.cliAtivos < 3) alertList.push({ type:'red', icon:'🚨', msg: `Poucos clientes ativos (${d.cliAtivos}) — expanda o pipeline` });
+  if (alertList.length === 0) alertList.push({ type:'green', icon:'✅', msg: 'Nenhum alerta crítico este mês' });
+  alertList.forEach(a => {
+    alerts.innerHTML += `<div class="alert alert-${a.type}">${a.icon} ${a.msg}</div>`;
+  });
+
+  // Agency metrics
+  const pip = state.pipeline;
+  const ponderado = pip.reduce((a, p) => a + (p.valor * p.prob / 100), 0);
+  const ganhos = pip.filter(p => p.prob === 100).length;
+  const total = pip.length;
+  const winRate = total ? ganhos / total : 0;
+  const ltv = mrr * 12;
+  document.getElementById('agencyMetrics').innerHTML = `
+    <div class="metric-row"><span class="metric-label">MRR (retainers)</span><span class="metric-val gold">${fmt(mrr)}</span></div>
+    <div class="metric-row"><span class="metric-label">Pipeline ponderado</span><span class="metric-val cyan">${fmt(ponderado)}</span></div>
+    <div class="metric-row"><span class="metric-label">Win Rate</span><span class="metric-val">${(winRate*100).toFixed(0)}%</span></div>
+    <div class="metric-row"><span class="metric-label">LTV médio est.</span><span class="metric-val gold">${fmt(ltv)}</span></div>
+    <div class="metric-row"><span class="metric-label">Clientes ativos</span><span class="metric-val">${d.cliAtivos}</span></div>
+    <div class="metric-row"><span class="metric-label">Total leads no pipeline</span><span class="metric-val">${total}</span></div>
+  `;
+
+  // Receita por serviço chart
+  const services = {};
+  state.lancamentos.filter(l => l.tipo === 'receita').forEach(l => {
+    services[l.servico] = (services[l.servico] || 0) + l.valor;
+  });
+  // Add MRR from clients if no launches
+  if (!Object.keys(services).length) {
+    state.clientes.filter(c => c.status === 'Ativo').forEach(c => {
+      services[c.servico] = (services[c.servico] || 0) + c.retainer;
+    });
+  }
+  const sorted = Object.entries(services).sort((a, b) => b[1] - a[1]);
+  const maxS = sorted[0]?.[1] || 1;
+  const chartEl = document.getElementById('receitaChart');
+  if (!sorted.length) {
+    chartEl.innerHTML = '<div class="text-small" style="padding:12px 0">Nenhuma receita lançada ainda. Adicione clientes ou lançamentos!</div>';
+  } else {
+    chartEl.innerHTML = sorted.slice(0, 8).map(([svc, val]) => `
+      <div class="bar-row">
+        <div class="bar-name">${svc.split(' ').slice(0, 2).join(' ')}</div>
+        <div class="bar-track"><div class="bar-fill" style="width:${(val/maxS*100).toFixed(0)}%"></div></div>
+        <div class="bar-label">${fmt(val)}</div>
+      </div>
+    `).join('');
+  }
+}
+
+// ── LANÇAMENTOS ──────────────────────────────────────────────────
+function addLancamento() {
+  const desc = document.getElementById('lancDesc').value.trim();
+  const valor = parseFloat(document.getElementById('lancValor').value);
+  if (!desc || !valor || valor <= 0) { alert('Preencha descrição e valor!'); return; }
+  const lanc = {
+    id: Date.now(),
+    tipo: document.getElementById('lancTipo').value,
+    desc,
+    servico: document.getElementById('lancServico').value,
+    valor,
+    mes: parseInt(document.getElementById('lancMes').value),
+    recorrente: document.getElementById('lancRecorrente').value,
+    data: new Date().toLocaleDateString('pt-BR'),
+  };
+  state.lancamentos.unshift(lanc);
+  save();
+  closeModal('modalLanc');
+  document.getElementById('lancDesc').value = '';
+  document.getElementById('lancValor').value = '';
+  renderLancamentos();
+}
+
+function renderLancamentos() {
+  const m = state.currentMonth;
+  const list = state.lancamentos.filter(l => l.mes === m);
+  const entradas = list.filter(l => l.tipo === 'receita').reduce((a, l) => a + l.valor, 0);
+  const saidas = list.filter(l => l.tipo !== 'receita').reduce((a, l) => a + l.valor, 0);
+  document.getElementById('lancEntradas').textContent = fmt(entradas);
+  document.getElementById('lancSaidas').textContent = fmt(saidas);
+  const saldo = entradas - saidas;
+  const saldoEl = document.getElementById('lancSaldo');
+  saldoEl.textContent = fmt(saldo);
+  saldoEl.style.color = saldo >= 0 ? 'var(--green)' : 'var(--red)';
+
+  // Set default month in modal
+  document.getElementById('lancMes').value = m;
+
+  const container = document.getElementById('lancList');
+  if (!list.length) {
+    container.innerHTML = '<div class="launch-row" style="justify-content:center;padding:20px 0;"><span class="text-small">Nenhum lançamento em ' + MONTHS_FULL[m] + '</span></div>';
+    return;
+  }
+  container.innerHTML = list.map(l => `
+    <div class="launch-row">
+      <div style="font-size:18px; flex-shrink:0">${l.tipo === 'receita' ? '💰' : l.tipo === 'despesa' ? '📉' : '🏢'}</div>
+      <div style="flex:1; min-width:0;">
+        <div class="launch-service">${l.desc}</div>
+        <div class="launch-tag">${l.servico} · ${l.recorrente === 'sim' ? '🔄 Recorrente' : 'Pontual'}</div>
+      </div>
+      <div style="text-align:right; flex-shrink:0;">
+        <div class="launch-amount" style="color:${l.tipo === 'receita' ? 'var(--green)' : 'var(--red)'}">
+          ${l.tipo === 'receita' ? '+' : '-'}${fmt(l.valor)}
+        </div>
+        <div style="font-size:9px; color:var(--text3); margin-top:2px;">${l.data}</div>
+      </div>
+      <button onclick="removeLanc(${l.id})" style="background:none;border:none;color:var(--text3);font-size:16px;padding:4px;cursor:pointer;flex-shrink:0;">✕</button>
+    </div>
+  `).join('');
+}
+
+function removeLanc(id) {
+  state.lancamentos = state.lancamentos.filter(l => l.id !== id);
+  save(); renderLancamentos();
+}
+
+// ── PIPELINE ─────────────────────────────────────────────────────
+function addPipeline() {
+  const empresa = document.getElementById('pipeEmpresa').value.trim();
+  const valor = parseFloat(document.getElementById('pipeValor').value) || 0;
+  if (!empresa) { alert('Informe o nome da empresa!'); return; }
+  const prob = parseInt(document.getElementById('pipeProb').value);
+  const stages = { 0:'Perdido', 10:'Lead', 30:'Qualificado', 50:'Proposta', 70:'Negociação', 90:'Negociação', 100:'Fechado' };
+  state.pipeline.unshift({
+    id: Date.now(),
+    empresa,
+    servico: document.getElementById('pipeServico').value,
+    valor,
+    prob,
+    contato: document.getElementById('pipeContato').value,
+    notas: document.getElementById('pipeNotas').value,
+    stage: stages[prob] || 'Qualificado',
+  });
+  save(); closeModal('modalPipe');
+  document.getElementById('pipeEmpresa').value = '';
+  document.getElementById('pipeValor').value = '';
+  document.getElementById('pipeNotas').value = '';
+  renderPipeline();
+}
+
+function renderPipeline() {
+  // Funnel cards
+  const stages = ['Lead','Qualificado','Proposta','Negociação','Fechado'];
+  const stageColors = { Lead:'blue', Qualificado:'blue', Proposta:'orange', Negociação:'gold', Fechado:'green', Perdido:'red' };
+  const counts = {};
+  stages.forEach(s => counts[s] = state.pipeline.filter(p => p.stage === s).length);
+  document.getElementById('funnelCards').innerHTML = stages.map(s => `
+    <div class="kpi-card ${stageColors[s]} " style="min-width:90px;">
+      <div class="kpi-label">${s}</div>
+      <div class="kpi-val">${counts[s]}</div>
+    </div>
+  `).join('');
+
+  // List
+  const stageClass = { Lead:'stage-lead', Qualificado:'stage-qual', Proposta:'stage-prop', Negociação:'stage-neg', Fechado:'stage-fech', Perdido:'stage-perd' };
+  const list = document.getElementById('pipeList');
+  if (!state.pipeline.length) {
+    list.innerHTML = '<div class="text-small" style="padding:16px 0">Nenhum lead no pipeline.</div>';
+    return;
+  }
+  list.innerHTML = state.pipeline.map(p => `
+    <div class="pipe-item">
+      <div class="pipe-header">
+        <div class="pipe-name">${p.empresa}</div>
+        <div class="pipe-stage ${stageClass[p.stage] || 'stage-lead'}">${p.stage}</div>
+      </div>
+      <div class="pipe-details">
+        <div class="pipe-detail">Serviço: <span>${p.servico}</span></div>
+        <div class="pipe-detail">Valor: <span>${fmt(p.valor)}</span></div>
+        <div class="pipe-detail">Prob: <span>${p.prob}%</span></div>
+      </div>
+      ${p.notas ? `<div style="font-size:11px;color:var(--text3);margin-top:6px;">💬 ${p.notas}</div>` : ''}
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-ghost btn-sm" onclick="removePipe(${p.id})">Remover</button>
+        ${p.prob < 100 ? `<button class="btn btn-gold btn-sm" onclick="advancePipe(${p.id})">Avançar →</button>` : ''}
+      </div>
+    </div>
+  `).join('');
+
+  // Clientes
+  const mrr = state.clientes.filter(c => c.status === 'Ativo').reduce((a, c) => a + c.retainer, 0);
+  document.getElementById('mrrTotal').textContent = fmt(mrr);
+  const churnColors = { Baixo:'green', Médio:'orange', Alto:'red' };
+  const statusColors2 = { Ativo:'green', Pausado:'orange', Inativo:'red' };
+  document.getElementById('clientesList').innerHTML = state.clientes.map(c => `
+    <div class="cliente-item">
+      <div class="cliente-header">
+        <div class="cliente-name">${c.nome}</div>
+        <div class="tag-${statusColors2[c.status] || 'blue'} card-tag">${c.status}</div>
+      </div>
+      <div class="cliente-details">
+        <div class="cliente-detail">Serviço: <span>${c.servico}</span></div>
+        <div class="cliente-detail">Retainer: <span>${fmt(c.retainer)}/mês</span></div>
+        <div class="cliente-detail">NPS: <span>${c.nps || '—'}</span></div>
+        <div class="cliente-detail">Churn: <span style="color:var(--${churnColors[c.churn] || 'text'})">${c.churn}</span></div>
+      </div>
+      ${c.obs ? `<div style="font-size:11px;color:var(--text3);margin-top:6px;">💬 ${c.obs}</div>` : ''}
+      <div style="display:flex;gap:8px;margin-top:10px;">
+        <button class="btn btn-ghost btn-sm" onclick="removeCli(${c.id})">Remover</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function removePipe(id) {
+  state.pipeline = state.pipeline.filter(p => p.id !== id);
+  save(); renderPipeline();
+}
+function advancePipe(id) {
+  const p = state.pipeline.find(x => x.id === id);
+  if (!p) return;
+  const probs = [10, 30, 50, 70, 90, 100];
+  const stages = ['Lead','Qualificado','Proposta','Negociação','Negociação','Fechado'];
+  const idx = probs.indexOf(p.prob);
+  if (idx < probs.length - 1) { p.prob = probs[idx + 1]; p.stage = stages[idx + 1]; }
+  save(); renderPipeline();
+}
+
+function addCliente() {
+  const nome = document.getElementById('cliNome').value.trim();
+  if (!nome) { alert('Informe o nome!'); return; }
+  state.clientes.unshift({
+    id: Date.now(),
+    nome,
+    servico: document.getElementById('cliServico').value,
+    retainer: parseFloat(document.getElementById('cliRetainer').value) || 0,
+    status: document.getElementById('cliStatus').value,
+    churn: document.getElementById('cliChurn').value,
+    nps: parseInt(document.getElementById('cliNps').value) || null,
+    obs: document.getElementById('cliObs').value,
+  });
+  save(); closeModal('modalCliente');
+  document.getElementById('cliNome').value = '';
+  document.getElementById('cliServico').value = '';
+  document.getElementById('cliRetainer').value = '';
+  renderPipeline();
+}
+function removeCli(id) {
+  state.clientes = state.clientes.filter(c => c.id !== id);
+  save(); renderPipeline();
+}
+
+// ── COMPRAS ──────────────────────────────────────────────────────
+let compraFilter = 'all';
+function filterCompras(f) { compraFilter = f; renderCompras(); }
+
+function addCompra() {
+  const item = document.getElementById('compraItem').value.trim();
+  const valor = parseFloat(document.getElementById('compraValor').value) || 0;
+  if (!item) { alert('Informe o item!'); return; }
+  state.compras.unshift({
+    id: Date.now(),
+    item,
+    cat: document.getElementById('compraCat').value,
+    valor,
+    prio: document.getElementById('compraPrio').value,
+    status: document.getElementById('compraStatus').value,
+    obs: document.getElementById('compraObs').value,
+  });
+  save(); closeModal('modalCompra');
+  document.getElementById('compraItem').value = '';
+  document.getElementById('compraValor').value = '';
+  document.getElementById('compraObs').value = '';
+  renderCompras();
+}
+
+function updateCompraStatus(id, status) {
+  const c = state.compras.find(x => x.id === id);
+  if (c) { c.status = status; save(); renderCompras(); }
+}
+
+function removeCompra(id) {
+  state.compras = state.compras.filter(c => c.id !== id);
+  save(); renderCompras();
+}
+
+function renderCompras() {
+  const pendente = state.compras.filter(c => c.status === 'Pendente').reduce((a, c) => a + c.valor, 0);
+  const aprovado = state.compras.filter(c => c.status === 'Aprovado').reduce((a, c) => a + c.valor, 0);
+  const analise = state.compras.filter(c => c.status === 'Análise').reduce((a, c) => a + c.valor, 0);
+  document.getElementById('compraPendente').textContent = fmt(pendente);
+  document.getElementById('compraAprovado').textContent = fmt(aprovado);
+  document.getElementById('compraAnalise').textContent = fmt(analise);
+  document.getElementById('compraTotal').textContent = fmt(pendente + aprovado + analise);
+
+  const catIcons = { Hardware:'💻', Software:'📱', Audiovisual:'🎬', Mobiliário:'🪑', Educação:'📚', Marketing:'📣', Outros:'📦' };
+  const prioColors = { Alta:'red', Média:'orange', Baixa:'green' };
+  const statusBg = { Pendente:'tag-orange', Aprovado:'tag-green', Análise:'tag-blue', Cancelado:'tag-red' };
+
+  const filtered = compraFilter === 'all' ? state.compras : state.compras.filter(c => c.status === compraFilter);
+
+  const container = document.getElementById('comprasList');
+  if (!filtered.length) {
+    container.innerHTML = '<div class="text-small" style="padding:16px 0">Nenhum item encontrado.</div>';
+    return;
+  }
+  container.innerHTML = filtered.map(c => `
+    <div class="compra-item">
+      <div class="compra-icon">${catIcons[c.cat] || '📦'}</div>
+      <div class="compra-info">
+        <div class="compra-name">${c.item}</div>
+        <div class="compra-cat">${c.cat}${c.obs ? ' · ' + c.obs : ''}</div>
+        <div style="display:flex;gap:6px;margin-top:6px;flex-wrap:wrap;">
+          <span class="card-tag tag-${prioColors[c.prio] || 'gold'}" style="font-size:9px;">${c.prio}</span>
+          <span class="card-tag ${statusBg[c.status] || 'tag-gold'}" style="font-size:9px;">${c.status}</span>
+        </div>
+      </div>
+      <div class="compra-right">
+        <div class="compra-val">${fmt(c.valor)}</div>
+        <div style="display:flex;flex-direction:column;gap:4px;margin-top:6px;">
+          ${c.status !== 'Aprovado' ? `<button class="btn btn-gold" style="padding:5px 10px;font-size:9px;width:auto;border-radius:6px;" onclick="updateCompraStatus(${c.id},'Aprovado')">✓ Aprovar</button>` : ''}
+          <button class="btn btn-danger" style="padding:5px 10px;font-size:9px;width:auto;border-radius:6px;" onclick="removeCompra(${c.id})">Remover</button>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────
+load();
+buildMonthScrolls();
+renderDash();
+renderLancamentos();
+renderPipeline();
+renderCompras();
+</script>
+</body>
+</html>
